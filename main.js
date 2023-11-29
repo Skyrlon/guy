@@ -1,23 +1,42 @@
-import * as THREE from 'three';
+import {
+  BoxGeometry,
+  Color,
+  Mesh,
+  MeshBasicMaterial,
+  PerspectiveCamera,
+  Scene,
+  WebGLRenderer,
+} from "three";
 
-const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+const container = document.querySelector("#scene-container");
 
-const renderer = new THREE.WebGLRenderer();
-renderer.setSize(window.innerWidth, window.innerHeight);
-document.body.appendChild(renderer.domElement);
+const scene = new Scene();
 
+scene.background = new Color("skyblue");
 
-//SET CAMERA POSITION
-camera.position.x = 50;
-camera.position.y = 50;
-camera.position.z = 50;
-camera.lookAt(scene.position);
+const fov = 35;
+const aspect = container.clientWidth / container.clientHeight;
+const near = 0.1;
+const far = 100;
 
-function animate() {
-    requestAnimationFrame(animate);
+const camera = new PerspectiveCamera(fov, aspect, near, far);
 
-    renderer.render(scene, camera);
-}
+camera.position.set(0, 0, 10);
 
-animate();
+const geometry = new BoxGeometry(2, 2, 2);
+
+const material = new MeshBasicMaterial();
+
+const cube = new Mesh(geometry, material);
+
+scene.add(cube);
+
+const renderer = new WebGLRenderer();
+
+renderer.setSize(container.clientWidth, container.clientHeight);
+
+renderer.setPixelRatio(window.devicePixelRatio);
+
+container.append(renderer.domElement);
+
+renderer.render(scene, camera);
