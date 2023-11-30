@@ -8,35 +8,72 @@ import {
   WebGLRenderer,
 } from "three";
 
-const container = document.querySelector("#scene-container");
+import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 
-const scene = new Scene();
+let camera, controls, scene, renderer;
 
-scene.background = new Color("skyblue");
+init();
 
-const fov = 35;
-const aspect = container.clientWidth / container.clientHeight;
-const near = 0.1;
-const far = 100;
+animate();
 
-const camera = new PerspectiveCamera(fov, aspect, near, far);
+function init() {
+  const container = document.querySelector("#scene-container");
 
-camera.position.set(0, 0, 10);
+  scene = new Scene();
 
-const geometry = new BoxGeometry(2, 2, 2);
+  scene.background = new Color("skyblue");
 
-const material = new MeshBasicMaterial();
+  const fov = 35;
+  const aspect = container.clientWidth / container.clientHeight;
+  const near = 0.1;
+  const far = 100;
 
-const cube = new Mesh(geometry, material);
+  camera = new PerspectiveCamera(fov, aspect, near, far);
 
-scene.add(cube);
+  camera.position.set(0, 0, 10);
 
-const renderer = new WebGLRenderer();
+  const geometry = new BoxGeometry(2, 2, 2);
 
-renderer.setSize(container.clientWidth, container.clientHeight);
+  const material = new MeshBasicMaterial();
 
-renderer.setPixelRatio(window.devicePixelRatio);
+  const cube = new Mesh(geometry, material);
 
-container.append(renderer.domElement);
+  scene.add(cube);
 
-renderer.render(scene, camera);
+  renderer = new WebGLRenderer();
+
+  renderer.setSize(container.clientWidth, container.clientHeight);
+
+  renderer.setPixelRatio(window.devicePixelRatio);
+
+  container.append(renderer.domElement);
+
+  // controls
+
+  controls = new OrbitControls(camera, renderer.domElement);
+  controls.listenToKeyEvents(window); // optional
+
+  //controls.addEventListener( 'change', render ); // call this only in static scenes (i.e., if there is no animation loop)
+
+  controls.enableDamping = true; // an animation loop is required when either damping or auto-rotation are enabled
+  controls.dampingFactor = 0.05;
+
+  controls.screenSpacePanning = false;
+
+  controls.minDistance = 10;
+  controls.maxDistance = 20;
+
+  controls.maxPolarAngle = Math.PI / 2;
+}
+
+function animate() {
+  requestAnimationFrame(animate);
+
+  controls.update(); // only required if controls.enableDamping = true, or if controls.autoRotate = true
+
+  render();
+}
+
+function render() {
+  renderer.render(scene, camera);
+}
