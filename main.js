@@ -9,6 +9,8 @@ import {
 } from "three";
 
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+import { DRACOLoader } from "three/addons/loaders/DRACOLoader.js";
 
 let camera, controls, scene, renderer;
 
@@ -30,9 +32,9 @@ function init() {
 
   camera = new PerspectiveCamera(fov, aspect, near, far);
 
-  camera.position.set(0, 0, 10);
+  camera.position.set(0, 0, 5);
 
-  const geometry = new BoxGeometry(2, 2, 2);
+  const geometry = new BoxGeometry(1, 1, 1);
 
   const material = new MeshBasicMaterial();
 
@@ -61,9 +63,28 @@ function init() {
   controls.screenSpacePanning = false;
 
   controls.minDistance = 10;
-  controls.maxDistance = 20;
+  controls.maxDistance = 100;
 
   controls.maxPolarAngle = Math.PI / 2;
+
+  const loader = new GLTFLoader();
+
+  loader.load(
+    "assets/guy.glb",
+    function (gltf) {
+      scene.add(gltf.scene);
+      gltf.animations.push("assets/Crouch To Stand.fbx");
+      console.log(gltf.animations); // Array<THREE.AnimationClip>
+      console.log(gltf.scene); // THREE.Group
+      console.log(gltf.scenes); // Array<THREE.Group>
+      console.log(gltf.cameras); // Array<THREE.Camera>
+      console.log(gltf.asset); // Object
+    },
+    undefined,
+    function (error) {
+      console.error(error);
+    }
+  );
 }
 
 function animate() {
