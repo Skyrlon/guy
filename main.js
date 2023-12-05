@@ -6,11 +6,11 @@ import {
   PerspectiveCamera,
   Scene,
   WebGLRenderer,
+  AmbientLight,
 } from "three";
 
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
-import { DRACOLoader } from "three/addons/loaders/DRACOLoader.js";
 
 let camera, controls, scene, renderer;
 
@@ -66,19 +66,20 @@ function init() {
   controls.maxDistance = 100;
 
   controls.maxPolarAngle = Math.PI / 2;
+  const light = new AmbientLight("white", 5);
 
+  light.position.set(10, 10, 10);
+  scene.add(light);
+  loadModel();
+}
+
+function loadModel() {
   const loader = new GLTFLoader();
-
   loader.load(
-    "assets/guy.glb",
+    "assets/Soldier.glb",
     function (gltf) {
+      gltf.scene.rotation.set(0, degToRad(180), 0);
       scene.add(gltf.scene);
-      gltf.animations.push("assets/Crouch To Stand.fbx");
-      console.log(gltf.animations); // Array<THREE.AnimationClip>
-      console.log(gltf.scene); // THREE.Group
-      console.log(gltf.scenes); // Array<THREE.Group>
-      console.log(gltf.cameras); // Array<THREE.Camera>
-      console.log(gltf.asset); // Object
     },
     undefined,
     function (error) {
@@ -97,4 +98,8 @@ function animate() {
 
 function render() {
   renderer.render(scene, camera);
+}
+
+function degToRad(deg) {
+  return (deg * Math.PI) / 180;
 }
