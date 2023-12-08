@@ -7,13 +7,16 @@ import {
   Scene,
   WebGLRenderer,
   AmbientLight,
+  AnimationMixer,
+  Clock,
 } from "three";
 
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 
-let camera, controls, scene, renderer;
+let camera, controls, scene, renderer, mixer, clock;
 
+clock = new Clock();
 init();
 
 animate();
@@ -32,7 +35,7 @@ function init() {
 
   camera = new PerspectiveCamera(fov, aspect, near, far);
 
-  camera.position.set(0, 0, 5);
+  camera.position.set(0, 0, -10);
 
   const geometry = new BoxGeometry(1, 1, 1);
 
@@ -76,10 +79,13 @@ function init() {
 function loadModel() {
   const loader = new GLTFLoader();
   loader.load(
-    "assets/Soldier.glb",
+    "assets/mannequin.glb",
     function (gltf) {
       gltf.scene.rotation.set(0, degToRad(180), 0);
       scene.add(gltf.scene);
+      mixer = new AnimationMixer(gltf.scene);
+
+      mixer.clipAction(gltf.animations[0]).play();
     },
     undefined,
     function (error) {
@@ -97,6 +103,9 @@ function animate() {
 }
 
 function render() {
+  let delta = clock.getDelta();
+
+  if (mixer) mixer.update(delta);
   renderer.render(scene, camera);
 }
 
