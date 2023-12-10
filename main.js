@@ -35,7 +35,7 @@ function init() {
 
   camera = new PerspectiveCamera(fov, aspect, near, far);
 
-  camera.position.set(0, 0, -10);
+  camera.position.set(0, 0, -500);
 
   const geometry = new BoxGeometry(1, 1, 1);
 
@@ -43,7 +43,7 @@ function init() {
 
   const cube = new Mesh(geometry, material);
 
-  scene.add(cube);
+  //scene.add(cube);
 
   renderer = new WebGLRenderer();
 
@@ -79,9 +79,10 @@ function init() {
 function loadModel() {
   const loader = new GLTFLoader();
   loader.load(
-    "assets/mannequin.glb",
+    "assets/mannequin_v2.glb",
     function (gltf) {
       gltf.scene.rotation.set(0, degToRad(180), 0);
+      gltf.scene.scale.set(0.1, 0.1, 0.1);
       scene.add(gltf.scene);
       mixer = new AnimationMixer(gltf.scene);
 
