@@ -4,7 +4,12 @@ body {
 
 #scene-container {
   position: absolute;
-  width: 100%;
+  width: calc(100% - 10rem);
   height: 100%;
   background-color: blue;
+}
+
+#hello {
+  position: absolute;
+  right: 0%;
 }

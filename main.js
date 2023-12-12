@@ -9,6 +9,7 @@ import {
   AmbientLight,
   AnimationMixer,
   Clock,
+  LoopOnce,
 } from "three";
 
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
@@ -35,7 +36,7 @@ function init() {
 
   camera = new PerspectiveCamera(fov, aspect, near, far);
 
-  camera.position.set(0, 0, -500);
+  camera.position.set(0, 0, -75);
 
   const geometry = new BoxGeometry(1, 1, 1);
 
@@ -85,8 +86,12 @@ function loadModel() {
       gltf.scene.scale.set(0.1, 0.1, 0.1);
       scene.add(gltf.scene);
       mixer = new AnimationMixer(gltf.scene);
-
-      mixer.clipAction(gltf.animations[0]).play();
+      let animation = mixer.clipAction(gltf.animations[0]);
+      animation.setLoop(LoopOnce);
+      document.getElementById("hello").addEventListener("click", (e) => {
+        e.preventDefault();
+        animation.play();
+      });
     },
     undefined,
     function (error) {
