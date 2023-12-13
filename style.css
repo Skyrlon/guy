@@ -9,7 +9,7 @@ body {
   background-color: blue;
 }
 
-#hello {
+#buttons-container {
   position: absolute;
   right: 0%;
 }

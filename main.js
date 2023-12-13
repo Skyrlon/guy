@@ -86,11 +86,15 @@ function loadModel() {
       gltf.scene.scale.set(0.1, 0.1, 0.1);
       scene.add(gltf.scene);
       mixer = new AnimationMixer(gltf.scene);
-      let animation = mixer.clipAction(gltf.animations[0]);
-      animation.setLoop(LoopOnce);
-      document.getElementById("hello").addEventListener("click", (e) => {
-        e.preventDefault();
-        animation.play();
+      gltf.animations.forEach((x) => {
+        const newButton = document.createElement("button");
+        newButton.textContent = x.name;
+        document.getElementById("buttons-container").append(newButton);
+        newButton.addEventListener("click", (e) => {
+          e.preventDefault();
+          mixer.clipAction(x).setLoop(LoopOnce);
+          mixer.clipAction(x).play();
+        });
       });
     },
     undefined,
